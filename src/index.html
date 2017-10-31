@@ -63,14 +63,18 @@
   <script type="text/javascript">
 
     function displayMessages() {
-      var ref = firebase.database().ref('users/' + '714856007');
-      ref.once("value").then(function (snapshot) {
-        snapshot.forEach(function (childSnapshot) {
-          var message = childSnapshot.child("message").val();
-          var node = document.createElement("LI");
-          var textnode = document.createTextNode(message);
-          node.appendChild(textnode);
-          document.getElementById("message-list").append(node);
+      var all_users = firebase.database().ref('users/');
+      all_users.once("value").then(function (snapshot) {
+        snapshot.forEach(function (userSnapshot) {
+          userSnapshot.forEach(function (messageSnapshot) {
+            var user = userSnapshot.key;
+            var message = messageSnapshot.child("message").val();
+            var time = messageSnapshot.child("time").val();
+            var node = document.createElement("LI");
+            var textnode = document.createTextNode("From: " + user + ": " + message + " at " + time);
+            node.appendChild(textnode);
+            document.getElementById("message-list").append(node);
+          });
         });
       });
     };
