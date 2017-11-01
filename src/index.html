@@ -77,9 +77,33 @@
           });
         });
       });
-    };
+    }
 
-    displayMessages()
+    function getMessages() {
+      console.log("In getMessages function");
+      var messages = "";
+      var all_users = firebase.database().ref('users/');
+      all_users.once("value").then(function (snapshot) {
+        snapshot.forEach(function (userSnapshot) {
+          userSnapshot.forEach(function (messageSnapshot) {
+            var user = userSnapshot.key;
+            var message = messageSnapshot.child("message").val();
+            var time = messageSnapshot.child("time").val();
+            messages = messages + "<br>From: " + user + ": " + message + " at " + time;
+            console.log("This is what messages is inside loop: " + messages);
+            displayMsgs(messages); 
+          });
+        });
+      });
+    }
+
+    function displayMsgs(display) {
+      document.getElementById("message-list").innerHTML = display;
+      console.log("This is what should have been appended to message-list: " + display)
+    }
+
+    getMessages();
+    membersDisplayInterval = setInterval(getMessages, 10000);
 
   </script>
 
