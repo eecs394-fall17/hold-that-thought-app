@@ -83,10 +83,10 @@
       console.log("In getMessages function");
       var messages = "";
       // Code for displaying Eureka's messages only
-      var eureka_ref = firebase.database().ref('users/' + '2247149929/');
+      var eureka_ref = firebase.database().ref('users/' + '7148560077/');
       eureka_ref.once("value").then(function (snapshot) {
         snapshot.forEach(function (messageSnapshot) {
-          var user = "2247149929"
+          var user = "7148560077"
           var message = messageSnapshot.child("message").val();
           var time = messageSnapshot.child("time").val();
           messages = messages + "<br>From: " + user + ": " + message + " at " + time;
