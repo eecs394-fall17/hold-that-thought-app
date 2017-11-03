@@ -63,6 +63,8 @@
 
   <script type="text/javascript">
 
+    count = 0;
+
     /*function displayMessages() {
       var all_users = firebase.database().ref('users/');
       all_users.once("value").then(function (snapshot) {
@@ -99,6 +101,7 @@
     }
 
     function getMsgs() {
+      console.log("In getMsgs");
       $('#message-list').empty();
       var eureka_ref = firebase.database().ref('users/' + '7148560077/');
       eureka_ref.once("value").then(function (snapshot) {
@@ -139,8 +142,22 @@
         document.getElementById("message-list").appendChild(newDiv);
     }
 
-    getMsgs();
-    membersDisplayInterval = setInterval(getMsgs, 10000);
+    function shouldRefresh() {
+      var newcount = 0;
+      var eureka_ref = firebase.database().ref('users/' + '7148560077/');
+      eureka_ref.once("value").then(function (snapshot) {
+        snapshot.forEach(function (messageSnapshot) {
+          newcount++;
+        });
+        if(newcount > count) {
+            getMsgs();
+            count = newcount;
+          }
+      });
+    }
+
+    shouldRefresh();
+    membersDisplayInterval = setInterval(shouldRefresh, 10000);
 
   </script>
 
