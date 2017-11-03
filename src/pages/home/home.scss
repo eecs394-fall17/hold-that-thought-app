@@ -1,5 +1,14 @@
 page-home {
-	ion-navbar {
-		background-color: 2A2C2C;
-	}
+	#message-list {
+    	border-top-style: solid;
+    	border-color: #FFD700;
+  	}
+
+  	#messages {
+
+  		border-bottom-style: solid;
+  		border-color: #C0C0C0;
+  		border-bottom-width: 1px;
+  		padding-top: 2px;
+  	}
 }

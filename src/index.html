@@ -47,6 +47,7 @@
 
   <!-- Firebase code --> 
   <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   <script>
     // Initialize Firebase
     var config = {
@@ -62,7 +63,7 @@
 
   <script type="text/javascript">
 
-    function displayMessages() {
+    /*function displayMessages() {
       var all_users = firebase.database().ref('users/');
       all_users.once("value").then(function (snapshot) {
         snapshot.forEach(function (userSnapshot) {
@@ -78,6 +79,7 @@
         });
       });
     }
+    */
 
     function getMessages() {
       console.log("In getMessages function");
@@ -92,6 +94,20 @@
           messages = messages + "<br>From: " + user + ": " + message + " at " + time;
           console.log("This is what messages is inside loop: " + messages);
           displayMsgs(messages); 
+        });
+      });
+    }
+
+    function getMsgs() {
+      $('#message-list').empty();
+      var eureka_ref = firebase.database().ref('users/' + '7148560077/');
+      eureka_ref.once("value").then(function (snapshot) {
+        snapshot.forEach(function (messageSnapshot) {
+          var user = "7148560077"
+          var message = messageSnapshot.child("message").val();
+          var time = messageSnapshot.child("time").val();
+          displayMessages("<br>From: " + user + ": " + message + " at " + time);
+          //console.log("This is what messages is inside loop: " + messages);
         });
       });
     }
@@ -116,8 +132,15 @@
       console.log("This is what should have been appended to message-list: " + display)
     }
 
-    getMessages();
-    membersDisplayInterval = setInterval(getMessages, 10000);
+    function displayMessages(display) {
+        var newDiv = document.createElement('div');
+        newDiv.id = "messages";
+        newDiv.innerHTML = display;
+        document.getElementById("message-list").appendChild(newDiv);
+    }
+
+    getMsgs();
+    membersDisplayInterval = setInterval(getMsgs, 10000);
 
   </script>
 
