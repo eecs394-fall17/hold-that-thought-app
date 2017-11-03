@@ -64,6 +64,8 @@
   <script type="text/javascript">
 
     count = 0;
+    signedin = false;
+    phoneno = null;
 
     /*function displayMessages() {
       var all_users = firebase.database().ref('users/');
@@ -103,7 +105,7 @@
     function getMsgs() {
       console.log("In getMsgs");
       $('#message-list').empty();
-      var eureka_ref = firebase.database().ref('users/' + '7148560077/');
+      var eureka_ref = firebase.database().ref('users/' + phoneno);
       eureka_ref.once("value").then(function (snapshot) {
         snapshot.forEach(function (messageSnapshot) {
           var user = "7148560077"
@@ -143,19 +145,36 @@
     }
 
     function shouldRefresh() {
-      var newcount = 0;
-      var eureka_ref = firebase.database().ref('users/' + '7148560077/');
-      eureka_ref.once("value").then(function (snapshot) {
-        snapshot.forEach(function (messageSnapshot) {
-          newcount++;
+      if(signedin) {
+        var newcount = 0;
+        var ref = firebase.database().ref('users/' + phoneno);
+        ref.once("value").then(function (snapshot) {
+          snapshot.forEach(function (messageSnapshot) {
+            newcount++;
+          });
+          if(newcount > count) {
+              getMsgs();
+              count = newcount;
+            }
         });
-        if(newcount > count) {
-            getMsgs();
-            count = newcount;
-          }
-      });
+      }
     }
 
+    function displayTexts() {
+      var newId = document.getElementById("userno").value;
+      console.log("this is what you typed in: " + newId);
+      var ref = firebase.database().ref("users");
+      ref.once("value").then(function (snapshot) {
+        var a = snapshot.exists();
+        var b = snapshot.child(newId).exists();
+        if(b) {
+          signedin = true;
+          phoneno = newId;
+          console.log("This is what phoneno is: " + phoneno);
+          document.getElementById("displayOnTrue").style.visibility = "visible";
+        }
+      });
+    }
     shouldRefresh();
     membersDisplayInterval = setInterval(shouldRefresh, 10000);
 
